@@ -1,0 +1,63 @@
+README TEMA1 ASC BIVOLARU ANDRA 333CA
+
+Marketplace:
+
+    - init:
+        For the marketplace class I'm using different data structures to store the data.
+        For the products, I'm using two lists:
+        one for the products and one for the number of products a producer published.
+        For the products, I'm storing a list of tuples (product, quantity) at the index of it's producer id.
+        For the number of products, I'm storing a list of integers at the index of it's producer id.
+        For the consumers, I'm using a list of lists at the index of the cart's id. Each list contains a tuple (product, producer id) the consumer wants to buy.
+        At the end, I'm declaring locks for changing the products, total_producers_elements and the consumers lists, and also for printing in the end.
+
+    - register_producer:
+        I'm using a lock to change the total_producers_elements and the products list.
+        I'm adding the producer id to the total_producers_elements list and I'm adding a list of tuples (product, quantity) to the products list.
+        I'm also adding a 0 to the number of products list.
+
+    - publish:
+        I'm using a lock to change the products list.
+        I'm adding the product to the products list at the index of the producer id, is the product was previously added.
+        I'm also adding the quantity to the number of products list at the index of the producer id.
+
+        If the product was not previously added, I'm adding it to the products list at the index of the producer id and I'm adding the quantity to the number of products list at the index of the producer id.
+
+    - new_cart:
+        I'm using a lock to change the consumers list.
+        I'm adding a list to the consumers list at the index of the cart id.
+
+    - add_to_cart:
+        I'm using a lock to change the consumers list.
+        I'm adding a tuple (product, producer id) to the consumers list at the index of the cart id.
+        After adding it to the consumers list, I'm using a lock to change the products list, to remove it from there.
+
+    - remove_from_cart:
+        Same as add_to_cart, but removing it from the cart and adding it back to the products list.
+
+    - place_order:
+        I'm using a lock for the consumers list.
+        I'm retrieving the list of products the consumer wants to buy from the consumers list at the index of the cart id.
+        At the end I'm printing the cart out and setting the cart to an empty list.
+
+    - For testing, I'm using unittest and I'm testing the methods used in the marketplace class. I'm also using a dummy Product class to test the marketplace class.
+
+Consumer:
+    - init :
+        Initializing all the parameters
+
+    - run:
+        I'm taking each cart given and I'm adding / removing it to the marketplace.
+        If the add didn't work, I'm using sleep to wait a bit and then I'm trying again.
+
+        In the end, I'm placing the order.
+
+
+Producer:
+    - init :
+        Initializing all the parameters
+
+    - run:
+        First, I'm registering the producer.
+        Then, I'm publishing the quantity of products.
+        If the publish didn't work, I'm using sleep to wait a bit and then I'm trying again. If it worked, the quantity will lower and it will sleep until it can publish again.
