@@ -38,13 +38,13 @@ class Producer(Thread):
 
     def run(self):
         producer_id = self.marketplace.register_producer()
-        while(True) :
+        while True:
             for (product, quantity, sleep_time) in self.products:
-                while (quantity > 0) :
+                while quantity > 0:
                     ret = self.marketplace.publish(producer_id, product)
 
-                    if ret :
+                    if ret:
                         time.sleep(sleep_time)
                         quantity -= 1
-                    else :
+                    else:
                         time.sleep(self.republish_wait_time)

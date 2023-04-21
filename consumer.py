@@ -39,27 +39,27 @@ class Consumer(Thread):
 
     def run(self):
         # For each product in the cart
-        for carts in self.carts :
+        for carts in self.carts:
             cart_id = self.marketplace.new_cart()
 
-            for cart in carts :
-                type = cart["type"]
-                product = cart["product"]
-                quantity = cart["quantity"]
+            for cart in carts:
+                op_type = cart['type']
+                product = cart['product']
+                quantity = cart['quantity']
 
-                while (quantity > 0) :
+                while quantity > 0:
                     # If the type is add, add the product to the cart
-                    if type == "add" :
+                    if op_type == "add":
                         res = self.marketplace.add_to_cart(cart_id, product)
-                        if (res == False) :
+                        if res is False:
                             # Wait for the retry wait time
                             time.sleep(self.retry_wait_time)
-                        else :
+                        else:
                             quantity -= 1
-                    elif type == "remove" :
+                    elif op_type == "remove":
                         # If the type is remove, remove the product from the cart
                         self.marketplace.remove_from_cart(cart_id, product)
                         quantity -= 1
-            
+
             # Buy the cart
             product = self.marketplace.place_order(cart_id)
